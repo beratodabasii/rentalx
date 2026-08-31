@@ -6,10 +6,7 @@ import com.rentalx.user.dto.RegisterRequest;
 import com.rentalx.user.dto.RegisterResponse;
 import com.rentalx.user.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -28,5 +25,7 @@ public class UserController {
     public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest);
     }
+
+
 
 }

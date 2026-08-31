@@ -1,8 +1,9 @@
 package com.rentalx.user.service;
 
 import com.rentalx.enums.Role;
+import com.rentalx.exception.EmailAlreadyExistsException;
 import com.rentalx.exception.InvalidCredentialsException;
-import com.rentalx.security.service.JwtService;
+import com.rentalx.security.JwtService;
 import com.rentalx.user.dto.LoginRequest;
 import com.rentalx.user.dto.LoginResponse;
 import com.rentalx.user.dto.RegisterRequest;
@@ -29,7 +30,7 @@ public class UserService {
 
    public RegisterResponse register(RegisterRequest registerRequest) {
         if(userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
         String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
         User user = new User();

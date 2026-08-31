@@ -51,5 +51,24 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(VehicleNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleVehicleNotFoundException(VehicleNotFoundException exception){
+        Map<String,String> response = Map.of(
+                "message", exception.getMessage()
+        );
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+    @ExceptionHandler(PlateNumberAlreadyExistsException.class)
+    public ResponseEntity<Map<String,String>> handlePlateNumberAlreadyExistsException(PlateNumberAlreadyExistsException exception){
+        Map<String,String> response = Map.of(
+                "message", exception.getMessage()
+        );
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
 
 }

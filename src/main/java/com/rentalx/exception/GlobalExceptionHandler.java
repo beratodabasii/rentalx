@@ -71,4 +71,14 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(ReservationConflictException.class)
+    public ResponseEntity<Map<String,String>> handleReservationConflictException(ReservationConflictException exception){
+        Map<String,String> response = Map.of(
+                "message", exception.getMessage()
+        );
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
 }

@@ -20,7 +20,7 @@ public class VehicleService {
     }
 
     public VehicleResponse createVehicle(VehicleRequest vehicleRequest) {
-        if(vehicleRepository.existByPlateNumber(vehicleRequest.getPlateNumber())) {
+        if(vehicleRepository.existsByPlateNumber(vehicleRequest.getPlateNumber())) {
             throw new PlateNumberAlreadyExistsException("Plate number already exists");
         }
         Vehicle vehicle = new Vehicle();

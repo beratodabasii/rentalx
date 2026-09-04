@@ -33,6 +33,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/users/register").permitAll()
                         .requestMatchers("/api/v1/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/vehicles").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/rentals").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/rentals/return").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

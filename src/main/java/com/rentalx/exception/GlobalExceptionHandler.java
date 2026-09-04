@@ -81,4 +81,14 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(PaymentConflictException.class)
+    public ResponseEntity<Map<String,String>> handlePaymentConflictException(PaymentConflictException exception){
+        Map<String,String> response = Map.of(
+                "message", exception.getMessage()
+        );
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
 }

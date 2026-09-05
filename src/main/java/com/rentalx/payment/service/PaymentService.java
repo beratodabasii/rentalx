@@ -54,17 +54,26 @@ public class PaymentService {
             throw new PaymentConflictException("Maximum payment attempt limit reached");
         }
 
+        PaymentStatus paymentStatus;
+        if(createPaymentRequest.getSimulateSuccess()){
+            paymentStatus = PaymentStatus.SUCCESS;
+        }else {
+            paymentStatus = PaymentStatus.FAILED;
+        }
+
         Payment payment = Payment.builder()
                 .reservation(reservation)
                 .amount(reservation.getTotalPrice())
-                .status(PaymentStatus.SUCCESS)
+                .status(paymentStatus)
                 .paymentType(createPaymentRequest.getPaymentType())
                 .attemptNumber(attemptNumber)
                 .build();
 
         Payment savedPayment = paymentRepository.save(payment);
-        reservation.setStatus(ReservationStatus.CONFIRMED);
-        reservationRepository.save(reservation);
+        if(paymentStatus.equals(PaymentStatus.SUCCESS)){
+            reservation.setStatus(ReservationStatus.CONFIRMED);
+            reservationRepository.save(reservation);
+        }
         CreatePaymentResponse createPaymentResponse = new CreatePaymentResponse();
         createPaymentResponse.setPaymentId(savedPayment.getId());
         createPaymentResponse.setReservationId(reservation.getId());

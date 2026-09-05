@@ -12,4 +12,6 @@ public class CreatePaymentRequest {
     private Long reservationId;
     @NotNull
     private PaymentType paymentType;
+    @NotNull
+    private Boolean simulateSuccess;
 }

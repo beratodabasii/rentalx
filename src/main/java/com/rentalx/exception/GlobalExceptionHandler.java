@@ -90,5 +90,95 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(response);
     }
+    @ExceptionHandler(RentalNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleRentalNotFoundException(
+            RentalNotFoundException exception) {
+
+        Map<String, String> response = Map.of(
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+    @ExceptionHandler(RentalConflictException.class)
+    public ResponseEntity<Map<String, String>> handleRentalConflictException(
+            RentalConflictException exception) {
+
+        Map<String, String> response = Map.of(
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidRentalRequestException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidRentalRequestException(
+            InvalidRentalRequestException exception) {
+
+        Map<String, String> response = Map.of(
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleReservationNotFoundException(
+            ReservationNotFoundException exception) {
+
+        Map<String, String> response = Map.of(
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidReservationRequestException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidReservationRequestException(
+            InvalidReservationRequestException exception) {
+
+        Map<String, String> response = Map.of(
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(ForbiddenOperationException.class)
+    public ResponseEntity<Map<String, String>> handleForbiddenOperationException(
+            ForbiddenOperationException exception) {
+
+        Map<String, String> response = Map.of(
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(response);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUserNotFoundException(
+            UserNotFoundException exception) {
+
+        Map<String, String> response = Map.of(
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
 
 }

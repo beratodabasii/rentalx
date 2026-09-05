@@ -3,6 +3,10 @@ package com.rentalx.rental.service;
 import com.rentalx.enums.RentalStatus;
 import com.rentalx.enums.ReservationStatus;
 import com.rentalx.enums.VehicleStatus;
+import com.rentalx.exception.InvalidRentalRequestException;
+import com.rentalx.exception.RentalConflictException;
+import com.rentalx.exception.RentalNotFoundException;
+import com.rentalx.exception.ReservationNotFoundException;
 import com.rentalx.rental.dto.CreateRentalRequest;
 import com.rentalx.rental.dto.CreateRentalResponse;
 import com.rentalx.rental.dto.ReturnRentalRequest;
@@ -35,15 +39,15 @@ public class RentalService {
     @Transactional
     public CreateRentalResponse createRental(CreateRentalRequest createRentalRequest) {
         Reservation reservation = reservationRepository.findById(createRentalRequest.getReservationId())
-                .orElseThrow(()-> new RuntimeException("Reservation not found"));
+                .orElseThrow(()-> new ReservationNotFoundException("Reservation not found"));
 
         if (!reservation.getStatus().equals(ReservationStatus.CONFIRMED)){
-            throw new RuntimeException("Reservation cannot be started in its current status");
+            throw new RentalConflictException("Reservation cannot be started in its current status");
         }
 
         boolean rentalAlreadyExists = rentalRepository.existsByReservationId(createRentalRequest.getReservationId());
         if (rentalAlreadyExists){
-            throw new RuntimeException("Rental already exists for this reservation");
+            throw new RentalConflictException("Rental already exists for this reservation");
 
         }
 
@@ -74,14 +78,14 @@ public class RentalService {
     @Transactional
     public CreateRentalResponse returnRental(ReturnRentalRequest returnRentalRequest) {
         Rental rental = rentalRepository.findById(returnRentalRequest.getRentalId())
-                .orElseThrow(()-> new RuntimeException("Rental not found"));
+                .orElseThrow(()-> new RentalNotFoundException("Rental not found"));
 
         if(!rental.getStatus().equals(RentalStatus.ACTIVE)){
-            throw new RuntimeException("Rental is not active");
+            throw new RentalConflictException("Rental is not active");
         }
 
         if (returnRentalRequest.getReturnKilometer() < rental.getPickupKilometer()) {
-            throw new RuntimeException("Return kilometer cannot be less than pickup kilometer");
+            throw new InvalidRentalRequestException("Return kilometer cannot be less than pickup kilometer");
         }
 
         rental.setReturnKilometer(returnRentalRequest.getReturnKilometer());

@@ -1,8 +1,7 @@
 package com.rentalx.reservation.service;
 
 import com.rentalx.enums.ReservationStatus;
-import com.rentalx.exception.ReservationConflictException;
-import com.rentalx.exception.VehicleNotFoundException;
+import com.rentalx.exception.*;
 import com.rentalx.reservation.dto.CreateReservationRequest;
 import com.rentalx.reservation.dto.CreateReservationResponse;
 import com.rentalx.reservation.entity.Reservation;
@@ -34,7 +33,7 @@ public class ReservationService {
 
     public CreateReservationResponse createReservation(CreateReservationRequest request , String userEmail)  {
         User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new RuntimeException("User not found")
+                () -> new UserNotFoundException("User not found")
         );
 
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId()).orElseThrow(
@@ -42,11 +41,11 @@ public class ReservationService {
         );
 
       if(request.getStartDateTime().isBefore(LocalDateTime.now())) {
-           throw new ReservationConflictException("Start date cannot be before current date");
+           throw new InvalidReservationRequestException("Start date cannot be before current date");
       }
 
       if (request.getStartDateTime().isAfter(request.getEndDateTime() ) || request.getStartDateTime().isEqual(request.getEndDateTime())) {
-          throw new ReservationConflictException("Start date must be before end date");
+          throw new InvalidReservationRequestException("Start date must be before end date");
       }
 
         List<ReservationStatus> status = new ArrayList<>();
@@ -93,7 +92,7 @@ public class ReservationService {
     public List<CreateReservationResponse> getMyReservations(String userEmail) {
 
         User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new RuntimeException("User not found")
+                () -> new UserNotFoundException ("User not found")
         );
 
         List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
@@ -117,11 +116,11 @@ public class ReservationService {
     public CreateReservationResponse cancelReservation(Long reservationId, String userEmail){
 
       Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
-              ()-> new RuntimeException("Reservation not found")
+              ()-> new ReservationNotFoundException("Reservation not found")
       );
 
       if(!reservation.getUser().getEmail().equals(userEmail)) {
-            throw new RuntimeException("You are not allowed to cancel this reservation");
+            throw new ForbiddenOperationException("You are not allowed to cancel this reservation");
       }
 
       if(!reservation.getStatus().equals(ReservationStatus.PENDING_PAYMENT) &&  !reservation.getStatus().equals(ReservationStatus.CONFIRMED)) {

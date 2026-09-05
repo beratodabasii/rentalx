@@ -16,4 +16,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             LocalDateTime startDateTime
     );
     List<Reservation> findByUserId(Long userId);
+    List<Reservation>  findByStatusAndExpiresAtBefore(ReservationStatus status,
+                                                      LocalDateTime now);
 }

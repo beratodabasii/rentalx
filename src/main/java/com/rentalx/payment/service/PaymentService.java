@@ -2,7 +2,9 @@ package com.rentalx.payment.service;
 
 import com.rentalx.enums.PaymentStatus;
 import com.rentalx.enums.ReservationStatus;
+import com.rentalx.exception.ForbiddenOperationException;
 import com.rentalx.exception.PaymentConflictException;
+import com.rentalx.exception.ReservationNotFoundException;
 import com.rentalx.payment.dto.CreatePaymentRequest;
 import com.rentalx.payment.dto.CreatePaymentResponse;
 import com.rentalx.payment.entity.Payment;
@@ -26,11 +28,11 @@ public class PaymentService {
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest , String userEmail) {
 
         Reservation reservation = reservationRepository.findById(createPaymentRequest.getReservationId())
-                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
 
 
         if(!reservation.getUser().getEmail().equals(userEmail)) {
-            throw new RuntimeException("You are not allowed to pay this reservation");
+            throw new ForbiddenOperationException("You are not allowed to pay this reservation");
         }
 
         if(!reservation.getStatus().equals(ReservationStatus.PENDING_PAYMENT)){

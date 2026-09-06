@@ -181,4 +181,16 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(VehicleConflictException.class)
+    public ResponseEntity<Map<String, String>> handleVehicleConflictException(
+            VehicleConflictException exception
+    ){
+        Map<String, String> response = Map.of(
+                "message", exception.getMessage()
+        );
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
 }

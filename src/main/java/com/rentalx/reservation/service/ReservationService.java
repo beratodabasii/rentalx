@@ -66,6 +66,9 @@ public class ReservationService {
         reservation.setEndDateTime(request.getEndDateTime());
 
         Long rentalDays = ChronoUnit.DAYS.between(request.getStartDateTime(), request.getEndDateTime());
+        if(rentalDays == 0){
+            rentalDays = 1L;
+        }
         BigDecimal dailyPrice = vehicle.getDailyPrice();
         BigDecimal totalPrice = dailyPrice.multiply(BigDecimal.valueOf(rentalDays));
         reservation.setDailyPrice(dailyPrice);

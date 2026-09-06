@@ -14,6 +14,8 @@ import com.rentalx.reservation.repository.ReservationRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class PaymentService {
 
@@ -33,6 +35,12 @@ public class PaymentService {
 
         if(!reservation.getUser().getEmail().equals(userEmail)) {
             throw new ForbiddenOperationException("You are not allowed to pay this reservation");
+        }
+
+        if (reservation.getExpiresAt().isBefore(LocalDateTime.now())) {
+
+
+            throw new PaymentConflictException("Reservation payment period has expired");
         }
 
         if(!reservation.getStatus().equals(ReservationStatus.PENDING_PAYMENT)){

@@ -5,7 +5,10 @@ import com.rentalx.rental.dto.CreateRentalResponse;
 import com.rentalx.rental.dto.ReturnRentalRequest;
 import com.rentalx.rental.service.RentalService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/rentals")
@@ -24,4 +27,20 @@ public class RentalController {
     public CreateRentalResponse returnRental(@Valid @RequestBody ReturnRentalRequest returnRequest) {
         return rentalService.returnRental(returnRequest);
     }
+
+    @GetMapping("/{id}")
+    public CreateRentalResponse getRentalById(@PathVariable Long id) {
+        return rentalService.getRentalById(id);
+    }
+
+    @GetMapping("/active")
+    public List<CreateRentalResponse> getActiveRentals() {
+        return rentalService.getActiveRentals();
+    }
+    @GetMapping("/my")
+    public List<CreateRentalResponse> getMyRentals(Authentication authentication) {
+        String email = authentication.getName();
+        return rentalService.getMyRentals(email);
+    }
+
 }

@@ -11,6 +11,8 @@ import com.rentalx.vehicle.dto.VehicleRequest;
 import com.rentalx.vehicle.dto.VehicleResponse;
 import com.rentalx.vehicle.entity.Vehicle;
 import com.rentalx.vehicle.repository.VehicleRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -89,7 +91,7 @@ public class VehicleService {
         return responses;
 
     }
-
+    @Cacheable(value = "vehicles", key = "#p0")
     public VehicleResponse getVehicleById(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(()-> new VehicleNotFoundException("Vehicle not found"));
@@ -110,7 +112,7 @@ public class VehicleService {
         vehicleResponse.setUpdatedAt(vehicle.getUpdatedAt());
         return vehicleResponse;
     }
-
+    @CacheEvict(value = "vehicles", key = "#p0")
     public VehicleResponse updateVehicle(Long vehicleId,UpdateVehicleRequest updateVehicleRequest) {
 
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
@@ -156,7 +158,7 @@ public class VehicleService {
         return vehicleResponse;
 
     }
-
+    @CacheEvict(value = "vehicles", key = "#p0")
     public VehicleResponse updateVehicleStatus(Long vehicleId, UpdateVehicleStatusRequest updateVehicleStatusRequest) {
 
         Vehicle vehicle = vehicleRepository.findById(vehicleId)

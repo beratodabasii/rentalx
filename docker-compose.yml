@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: rentalx-postgres
+    environment:
+      POSTGRES_DB: rentalx
+      POSTGRES_USER: rentalx
+      POSTGRES_PASSWORD: rentalx123
+    ports:
+      - "5433:5432"
+
+  redis:
+    image: redis:8-alpine
+    container_name: rentalx-redis
+    ports:
+      - "6380:6379"
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: rentalx-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: rentalx
+      RABBITMQ_DEFAULT_PASS: rentalx123
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+
+  app:
+    build: .
+    container_name: rentalx-app
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/rentalx
+      SPRING_DATASOURCE_USERNAME: rentalx
+      SPRING_DATASOURCE_PASSWORD: rentalx123
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: rentalx
+      SPRING_RABBITMQ_PASSWORD: rentalx123
+
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq

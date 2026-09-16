@@ -6,7 +6,7 @@ import com.rentalx.vehicle.dto.UpdateVehicleRequest;
 import com.rentalx.vehicle.dto.UpdateVehicleStatusRequest;
 import com.rentalx.vehicle.dto.VehicleRequest;
 import com.rentalx.vehicle.dto.VehicleResponse;
-import com.rentalx.vehicle.service.VehicleService;
+import com.rentalx.vehicle.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

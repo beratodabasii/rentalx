@@ -1,4 +1,4 @@
-package com.rentalx.vehicle.service;
+package com.rentalx.vehicle;
 
 import com.rentalx.enums.VehicleStatus;
 import com.rentalx.enums.VehicleType;
